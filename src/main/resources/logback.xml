@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="2 seconds">
+  <include resource="org/springframework/boot/logging/logback/base.xml" />
+  <property resource="application.yaml" />
+  <springProperty scope="context" name="CONTENT_DIRECTORY" source="content.directory"/>
+  <property name="LOG_PATH" value="${CONTENT_DIRECTORY}logs"/>
+  <timestamp key="currentTimestamp" datePattern="yyyy-MM-dd'_'HH"/>
+
+  <appender name="SYSTEM_OUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>
+        %yellow(%d{yyyy-MM-dd HH:mm:ss.SSS}) %red([%thread]) %highlight(%-5level) %green(%logger{36}.%L) : %msg%n%throwable
+      </pattern>
+    </encoder>
+  </appender>
+
+  <appender name="SAVE_TO_FILE"
+    class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_PATH}/telethon_rag.log</file>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%L : %msg%n%throwable</Pattern>
+    </encoder>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <!-- the rollover occurs when the active log file reaches the maximum file size before the end of the time period. -->
+      <!-- The rollover period is inferred from the smallest date unit value of fileNamePattern -->
+      <!-- each file should be at most [maxFileSize]-->
+      <maxFileSize>200MB</maxFileSize>
+      <fileNamePattern>
+        ${LOG_PATH}/archive/%d{yyyy-MM-dd}/telethon_rag_%i.log.gz
+      </fileNamePattern>
+    </rollingPolicy>
+  </appender>
+
+  <!--    <logger name="org.hibernate.SQL" level="debug"/>-->
+<!--  <logger name="sun.net.www.protocol.http.HttpURLConnection" level="debug"/>-->
+  <root level="INFO">
+<!--  <root level="DEBUG">-->
+<!--    <appender-ref ref="SYSTEM_OUT"/>-->
+    <appender-ref ref="SAVE_TO_FILE"/>
+  </root>
+</configuration>
