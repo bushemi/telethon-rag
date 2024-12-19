@@ -20,9 +20,16 @@
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mapstruct.version>1.5.3.Final</mapstruct.version>
+    <commons-text.version>1.13.0</commons-text.version>
   </properties>
 
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>${commons-text.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.projectlombok</groupId>
