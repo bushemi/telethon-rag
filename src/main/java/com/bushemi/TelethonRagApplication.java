@@ -10,7 +10,6 @@ public class TelethonRagApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TelethonRagApplication.class, args);
-        System.out.println("TelethonRagApplication.main");
     }
 
 }
