@@ -16,11 +16,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Slf4j
+@Service
 public class TelethonApiServiceImpl implements TelethonApiService {
 
     private final static String DATE_PATTERN = ""; //"2024-12-19 18:48:29+00:00";
