@@ -1,15 +1,16 @@
 package com.bushemi.service;
 
-import com.bushemi.model.telethon.TelegramChannel;
-import com.bushemi.model.telethon.TelegramMessages;
+import com.bushemi.model.telethon.TelegramChannelDto;
+import com.bushemi.model.telethon.TelegramMessagesDto;
 
 import java.util.List;
 
 public interface TelethonApiService {
 
-    List<TelegramChannel> getChannels(int limit);
+    List<TelegramChannelDto> getChannels(int limit);
 
-    TelegramMessages getMessages(Long chatId, Integer limit, int from);
+    TelegramMessagesDto getMessages(Long chatId, Integer limit, int from);
 
     Integer totalChats();
+
 }

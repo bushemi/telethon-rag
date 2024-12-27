@@ -5,12 +5,12 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TelegramMessages {
+public class TelegramMessagesDto {
 
     private Long chatId;
     private Integer from;
     private Integer limit;
-    private List<TelegramMessage> messages;
+    private List<TelegramMessageDto> messages;
     private Integer total;
 
 }

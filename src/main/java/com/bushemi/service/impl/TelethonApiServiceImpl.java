@@ -1,7 +1,7 @@
 package com.bushemi.service.impl;
 
-import com.bushemi.model.telethon.TelegramChannel;
-import com.bushemi.model.telethon.TelegramMessages;
+import com.bushemi.model.telethon.TelegramChannelDto;
+import com.bushemi.model.telethon.TelegramMessagesDto;
 import com.bushemi.model.telethon.TelegramTotalChats;
 import com.bushemi.service.TelethonApiService;
 import com.google.gson.Gson;
@@ -34,13 +34,13 @@ public class TelethonApiServiceImpl implements TelethonApiService {
 //        List<TelegramChannel> channels = telethonApiService.getChannels(10);
 //        System.out.println("channels = " + channels);
 
-        TelegramMessages messages = telethonApiService.getMessages(-1002101121969L, 10, 0);
+        TelegramMessagesDto messages = telethonApiService.getMessages(-1002101121969L, 10, 0);
         System.out.println("messages = " + messages);
     }
 
 
     @Override
-    public List<TelegramChannel> getChannels(int limit) {
+    public List<TelegramChannelDto> getChannels(int limit) {
         URIBuilder uriBuilder = new URIBuilder();
 //        uriBuilder.setHost("http://192.168.88.222:5000/get_chats");
         uriBuilder.setHost(TELETHON_HOST);
@@ -77,8 +77,8 @@ public class TelethonApiServiceImpl implements TelethonApiService {
 //            String s = new String(string.getBytes(StandardCharsets.US_ASCII), StandardCharsets.UTF_8);
 //            System.out.println("s = " + s);
             System.out.println("Decoded: " + decoded);
-            ParameterizedTypeReference<List<TelegramChannel>> parameterizedTypeReference = new ParameterizedTypeReference<>() {};
-            List<TelegramChannel> list = GSON.fromJson(string, parameterizedTypeReference.getType());
+            ParameterizedTypeReference<List<TelegramChannelDto>> parameterizedTypeReference = new ParameterizedTypeReference<>() {};
+            List<TelegramChannelDto> list = GSON.fromJson(string, parameterizedTypeReference.getType());
             list.stream()
 //                .map(Map::entrySet)
 //                .forEach(x -> x.forEach(entry -> System.out.println(" " + entry)));
@@ -94,7 +94,7 @@ public class TelethonApiServiceImpl implements TelethonApiService {
     }
 
     @Override
-    public TelegramMessages getMessages(Long chatId, Integer limit, int from) {
+    public TelegramMessagesDto getMessages(Long chatId, Integer limit, int from) {
 //        http://192.168.88.222:5000/chat/-1002101121969/getMessages?limit=5&from=10000
         URIBuilder uriBuilder = new URIBuilder();
 //        uriBuilder.setHost("http://192.168.88.222:5000/get_chats");
@@ -135,7 +135,7 @@ public class TelethonApiServiceImpl implements TelethonApiService {
 //            System.out.println("s = " + s);
             System.out.println("Decoded: " + decoded);
 
-            TelegramMessages telegramMessages = GSON.fromJson(string, TelegramMessages.class);
+            TelegramMessagesDto telegramMessages = GSON.fromJson(string, TelegramMessagesDto.class);
             log.info("Got the result {}", decoded);
             return telegramMessages;
         }

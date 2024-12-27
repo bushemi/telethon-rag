@@ -2,10 +2,8 @@ package com.bushemi.model.telethon;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
-public class TelegramChannel {
+public class TelegramChannelDto {
 
     private Long id;
     private String date;

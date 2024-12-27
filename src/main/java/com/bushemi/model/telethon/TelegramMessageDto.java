@@ -3,7 +3,7 @@ package com.bushemi.model.telethon;
 import lombok.Data;
 
 @Data
-public class TelegramMessage {
+public class TelegramMessageDto {
 
     private Long id;
     private String date;
