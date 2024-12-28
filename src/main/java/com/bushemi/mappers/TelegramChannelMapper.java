@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
+import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -18,22 +19,25 @@ public interface TelegramChannelMapper {
 
     @Named("mapDateFromString")
     static Date mapDateFromString(String dateTimeString) {
-        // Define a formatter for the input string
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssxxx");
 
-        // Parse the string to ZonedDateTime
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(dateTimeString, formatter);
 
-        // Convert to java.util.Date
         return Date.from(zonedDateTime.toInstant());
     }
 
+    static Date getDateNow() {
+        ZonedDateTime zonedDateTime = ZonedDateTime.now(Clock.systemUTC());
+        return Date.from(zonedDateTime.toInstant());
+    }
 
-    //    @Mapping(target = "requests", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tgChannelId", source = "id")
     @Mapping(target = "isChannel", source = "is_channel")
     @Mapping(target = "isGroup", source = "is_group")
     @Mapping(target = "wholeDialog", source = "whole_dialog")
     @Mapping(target = "date", source = "date", qualifiedByName = "mapDateFromString")
+    @Mapping(target = "savingDate", expression = "java(TelegramChannelMapper.getDateNow())")
     TelegramChannel mapFromDto(TelegramChannelDto channel);
 
 }

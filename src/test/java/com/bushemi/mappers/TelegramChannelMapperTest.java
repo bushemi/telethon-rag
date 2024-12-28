@@ -47,12 +47,13 @@ public class TelegramChannelMapperTest {
 
         //then
         TelegramChannel expected = TelegramChannel.builder()
-                                                  .id(10L)
+                                                  .tgChannelId(10L)
                                                   .name("12345_test")
                                                   .isChannel(true)
                                                   .isGroup(false)
                                                   .wholeDialog("1234")
                                                   .date(Date.from(Instant.ofEpochMilli(1734630509000L)))
+                                                  .savingDate(result.getSavingDate()) // to skip static mock for current datetime
                                                   .build();
         assertThat(result).isEqualTo(expected);
 

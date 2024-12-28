@@ -11,15 +11,17 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @NoArgsConstructor
-@Entity(name = "TELEGRAM_CHANNELS")
+@Entity(name = "TELEGRAM_CHANNEL")
 @Table
 @EqualsAndHashCode
 public class TelegramChannel {
 
     @Id
     @GeneratedValue
-    @Column(name = "TELEGRAM_CHANNEL_ID")
+    @Column(name = "ID")
     private Long id;
+    @Column(name = "TELEGRAM_CHANNEL_ID")
+    private Long tgChannelId;
     @Column(name = "DATE")
     private Date date;
     @Column(name = "IS_CHANNEL")
@@ -30,5 +32,10 @@ public class TelegramChannel {
     private String name;
     @Column(name = "WHOLE_DIALOG", columnDefinition = "VARCHAR")
     private String wholeDialog;
+    /**
+     * date of saving to DB
+     */
+    @Column(name = "SAVING_DATE")
+    private Date savingDate;
 
 }
