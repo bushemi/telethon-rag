@@ -9,6 +9,7 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -36,10 +37,10 @@ public class VectorServiceImpl implements VectorService {
 //                             Map.of("meta2", "meta2"))
 //        );
 
-        log.info("Created documents");
+//        log.info("Created documents");
 // Add the documents to PGVector
 //        vectorStore.add(documents);
-        log.info("Added documents");
+//        log.info("Added documents");
 
 // Retrieve documents similar to a query
         List<Document> results = vectorStore.similaritySearch(SearchRequest.query(text)
@@ -59,8 +60,17 @@ public class VectorServiceImpl implements VectorService {
     }
 
     @Override
-    public void add(String text) {
+    public void add(String text, Map<String, Object> metadata) {
+        //###################### one document
+        List<Document> documents = List.of(
+                new Document(text, metadata)
+        );
 
+        // Add the documents to PGVector
+        vectorStore.add(documents);
+
+//        String string = find(text);
+//        System.out.println("string = " + string);
     }
 
 }

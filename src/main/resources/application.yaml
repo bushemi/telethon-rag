@@ -27,9 +27,9 @@ spring:
       pgvector:
         index-type: HNSW
         distance-type: COSINE_DISTANCE
-        dimensions: 1536
+        dimensions: 768
     ollama:
-      base-url: http://192.168.88.222:11434
+      base-url: http://192.168.88.222:151
 
 content:
   directory: D://tg_logs/

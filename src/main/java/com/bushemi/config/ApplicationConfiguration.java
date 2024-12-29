@@ -1,5 +1,8 @@
 package com.bushemi.config;
 
+import com.bushemi.scheduler.Scheduler;
+import com.bushemi.service.TelegramCollector;
+import com.bushemi.service.VectorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.ollama.OllamaEmbeddingModel;
@@ -33,6 +36,12 @@ public class ApplicationConfiguration {
                                    EmbeddingModel embeddingModel,
                                    @Value("${spring.ai.vectorstore.pgvector.dimensions}") Integer dimensions) {
         return new PgVectorStore(jdbcTemplate, embeddingModel, dimensions);
+    }
+
+    @Bean
+    public Scheduler botScheduler(TelegramCollector telegramCollector,
+                                  VectorService vectorService) {
+        return new Scheduler(telegramCollector, vectorService);
     }
 
 }

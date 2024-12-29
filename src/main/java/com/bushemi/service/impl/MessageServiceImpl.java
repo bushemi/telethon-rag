@@ -6,6 +6,7 @@ import com.bushemi.service.VectorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -24,7 +25,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void addNewMessage(String inputText) {
-        vectorService.add(inputText);
+        vectorService.add(inputText, Map.of("meta2", "meta2"));
     }
 
 }

@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static java.util.Objects.nonNull;
+
 @Slf4j
 @Service
 public class TelethonApiServiceImpl implements TelethonApiService {
@@ -42,14 +44,17 @@ public class TelethonApiServiceImpl implements TelethonApiService {
 
 
     @Override
-    public List<TelegramChannelDto> getChannels(int limit) {
+    public List<TelegramChannelDto> getChannels(int limit, String afterDate) {
         URIBuilder uriBuilder = new URIBuilder();
-//        uriBuilder.setHost("http://192.168.88.222:5000/get_chats");
         uriBuilder.setHost(TELETHON_HOST);
         uriBuilder.setPort(TELETHON_PORT);
         uriBuilder.setScheme(TELETHON_SCHEME);
         uriBuilder.setPath("get_chats");
         uriBuilder.addParameter("limit", String.valueOf(limit));
+        if (nonNull(afterDate)) {
+            uriBuilder.addParameter("offset_date", afterDate);
+        }
+
         // building http client
         RequestConfig requestConfig = RequestConfig.custom()
 //                                                   .setConnectionRequestTimeout(600_000)
@@ -59,7 +64,7 @@ public class TelethonApiServiceImpl implements TelethonApiService {
                                                                .setDefaultRequestConfig(requestConfig)
                                                                .build()) {
 
-            System.out.println("uriBuilder.build() = " + uriBuilder.build());
+            log.info("uriBuilder.build() = " + uriBuilder.build());
 //            HttpGet request = new HttpGet(url);
             HttpGet request = new HttpGet(uriBuilder.build());
 //            HttpPost request = new HttpPost(uriBuilder.build());
@@ -73,20 +78,20 @@ public class TelethonApiServiceImpl implements TelethonApiService {
             HttpEntity entity = httpResponse.getEntity();
 
             String string = EntityUtils.toString(entity, StandardCharsets.UTF_8);
-            System.out.println("string = " + string);
-            String decoded = StringEscapeUtils.unescapeJava(string);
+//            log.info("string = " + string);
+//            String decoded = StringEscapeUtils.unescapeJava(string);
 
 //            String s = new String(string.getBytes(StandardCharsets.US_ASCII), StandardCharsets.UTF_8);
 //            System.out.println("s = " + s);
-            System.out.println("Decoded: " + decoded);
+//            log.info("Decoded: " + decoded);
             ParameterizedTypeReference<List<TelegramChannelDto>> parameterizedTypeReference = new ParameterizedTypeReference<>() {};
             List<TelegramChannelDto> list = GSON.fromJson(string, parameterizedTypeReference.getType());
-            list.stream()
-//                .map(Map::entrySet)
-//                .forEach(x -> x.forEach(entry -> System.out.println(" " + entry)));
-//                    .map(TelegramChannel::getWhole_dialog)
-                .forEach(System.out::println);
-            log.info("Got the result {}", decoded);
+//            list.stream()
+////                .map(Map::entrySet)
+////                .forEach(x -> x.forEach(entry -> System.out.println(" " + entry)));
+////                    .map(TelegramChannel::getWhole_dialog)
+//                .forEach(System.out::println);
+//            log.info("Got the result {}", decoded);
             return list;
         }
         catch (Exception e) {
@@ -116,7 +121,7 @@ public class TelethonApiServiceImpl implements TelethonApiService {
                                                                .setDefaultRequestConfig(requestConfig)
                                                                .build()) {
 
-            System.out.println("uriBuilder.build() = " + uriBuilder.build());
+            log.info("uriBuilder.build() = " + uriBuilder.build());
 //            HttpGet request = new HttpGet(url);
             HttpGet request = new HttpGet(uriBuilder.build());
 //            HttpPost request = new HttpPost(uriBuilder.build());
@@ -130,12 +135,12 @@ public class TelethonApiServiceImpl implements TelethonApiService {
             HttpEntity entity = httpResponse.getEntity();
 
             String string = EntityUtils.toString(entity, StandardCharsets.UTF_8);
-            System.out.println("string = " + string);
+            log.info("string = " + string);
             String decoded = StringEscapeUtils.unescapeJava(string);
 
 //            String s = new String(string.getBytes(StandardCharsets.US_ASCII), StandardCharsets.UTF_8);
 //            System.out.println("s = " + s);
-            System.out.println("Decoded: " + decoded);
+            log.info("Decoded: " + decoded);
 
             TelegramMessagesDto telegramMessages = GSON.fromJson(string, TelegramMessagesDto.class);
             log.info("Got the result {}", decoded);
@@ -165,7 +170,7 @@ public class TelethonApiServiceImpl implements TelethonApiService {
                                                                .setDefaultRequestConfig(requestConfig)
                                                                .build()) {
 
-            System.out.println("uriBuilder.build() = " + uriBuilder.build());
+            log.info("uriBuilder.build() = " + uriBuilder.build());
 //            HttpGet request = new HttpGet(url);
             HttpGet request = new HttpGet(uriBuilder.build());
 //            HttpPost request = new HttpPost(uriBuilder.build());
@@ -179,12 +184,12 @@ public class TelethonApiServiceImpl implements TelethonApiService {
             HttpEntity entity = httpResponse.getEntity();
 
             String string = EntityUtils.toString(entity, StandardCharsets.UTF_8);
-            System.out.println("string = " + string);
+            log.info("string = " + string);
             String decoded = StringEscapeUtils.unescapeJava(string);
 
 //            String s = new String(string.getBytes(StandardCharsets.US_ASCII), StandardCharsets.UTF_8);
 //            System.out.println("s = " + s);
-            System.out.println("Decoded: " + decoded);
+            log.info("Decoded: " + decoded);
 
             TelegramTotalChats telegramTotalChats = GSON.fromJson(string, TelegramTotalChats.class);
 
