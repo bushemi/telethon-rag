@@ -2,7 +2,10 @@ package com.bushemi.config;
 
 import com.bushemi.scheduler.Scheduler;
 import com.bushemi.service.TelegramCollector;
+import com.bushemi.service.TelethonApiService;
 import com.bushemi.service.VectorService;
+import com.bushemi.service.impl.TelethonApiServiceImpl;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.ollama.OllamaEmbeddingModel;
@@ -42,6 +45,22 @@ public class ApplicationConfiguration {
     public Scheduler botScheduler(TelegramCollector telegramCollector,
                                   VectorService vectorService) {
         return new Scheduler(telegramCollector, vectorService);
+    }
+
+    @Bean
+    public Gson gson() {
+        return new Gson();
+    }
+
+    @Bean
+    public TelethonApiService telethonApiService(Gson gson,
+                                                 @Value("${telethon.service.http-scheme}") String telethonHttpScheme,
+                                                 @Value("${telethon.service.host}") String telethonHost,
+                                                 @Value("${telethon.service.port}") Integer telethonPort) {
+        return new TelethonApiServiceImpl(gson,
+                                          telethonHttpScheme,
+                                          telethonHost,
+                                          telethonPort);
     }
 
 }

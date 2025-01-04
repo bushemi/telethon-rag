@@ -16,10 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,26 +33,6 @@ public class TelegramCollectorImpl implements TelegramCollector {
     private final TelegramMessageRepository telegramMessageRepository;
     private final VectorService vectorService;
 
-    public static void main(String[] args) {
-        String date = "2024-12-24 02:19:35+00:00";
-//        Date date1 = mapDateFromString(date);
-//        date1.setTime(date1.getTime() + 1000);
-//        System.out.println("date1 = " + date1);
-//        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date1));
-        System.out.println("date = " + date);
-        String datePlusSecond = getDatePlusSecond(date);
-        System.out.println("datePlusSecond = " + datePlusSecond);
-    }
-
-    private static String getDatePlusSecond(String dateTimeString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssxxx");
-
-        ZonedDateTime zonedDateTime = ZonedDateTime.parse(dateTimeString, formatter);
-
-        Date date = Date.from(zonedDateTime.toInstant());
-        date.setTime(date.getTime() + 1000);
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-    }
 
     @Override
     public void collectChannels() {
@@ -69,17 +45,20 @@ public class TelegramCollectorImpl implements TelegramCollector {
         while (channels.size() == CHAT_CHUNK_SIZE) {
             channels = telethonApiService.getChannels(CHAT_CHUNK_SIZE, lastDate);
 
-//            channels
-//                    .forEach(channel -> log.info("tg_chnl_id = {}, date = {}", channel.getId(), channel.getDate()));
-
-            channels
+            long savedChannels = channels
                     .stream()
                     .filter(channel -> !telegramChannelRepository.existsByTgChannelId(channel.getId()))
                     .map(TelegramChannelMapper.MAPPER::mapFromDto)
                     .map(telegramChannelRepository::save)
-                    .forEach(channel -> log.info("saved new channel with Id = [{}] and name = [{}]",
-                                                 channel.getTgChannelId(),
-                                                 channel.getName()));
+                    .peek(channel -> log.info("saved new channel with Id = [{}] and name = [{}]",
+                                              channel.getTgChannelId(),
+                                              channel.getName()))
+                    .count();
+
+            if (savedChannels == 0) {
+                log.info("All existing channels were saved before");
+                return;
+            }
 
             TelegramChannelDto telegramChannelDto = channels.get(channels.size() - 1);
             lastDate = telegramChannelDto.getDate();
@@ -87,26 +66,20 @@ public class TelegramCollectorImpl implements TelegramCollector {
                 lastDate = lastDate.substring(0, lastDate.indexOf("+"));
             }
             counter += channels.size();
-            log.info("processed = {}", counter);
+            log.info("Processed [{}] of [{}] total channels ", counter, totalChats);
         }
-
     }
 
     @Override
     public void collectMessagesForChannel(Long channelId) {
-        messages(channelId);
-
-    }
-
-    private void messages(Long channelId) {
         int counter = 0;
         String lastDate = null;
-//        do {
+
         TelegramMessagesDto messages = telethonApiService.getMessages(channelId, MESSAGE_CHUNK_SIZE, null);
-        log.info("messages.getMessages().size() = " + messages.getMessages().size());
+        log.info("Messages to process = [{}] ", messages.getMessages().size());
         while (messages.getMessages().size() == MESSAGE_CHUNK_SIZE) {
             messages = telethonApiService.getMessages(channelId, MESSAGE_CHUNK_SIZE, lastDate);
-            log.info("messages.getMessages().size() = " + messages.getMessages().size());
+            log.info("Messages to process = [{}] ", messages.getMessages().size());
             long savedMessages = messages.getMessages()
                                          .stream()
                                          .filter(msg -> StringUtils.isNotEmpty(msg.getMessage()))
@@ -116,8 +89,11 @@ public class TelegramCollectorImpl implements TelegramCollector {
                                          .map(telegramMessageRepository::save)
                                          .peek(this::saveVector)
                                          .count();
-//                    .forEach(this::saveVector);
-//                    .forEach(msg -> log.info("save msg tg_id = {}, date = {}", msg.getTelegramMessageId(), msg.getDate()));
+
+            if (savedMessages == 0) {
+                log.info("All existing messages were saved before");
+                return;
+            }
 
             TelegramMessageDto telegramMessageDto = messages.getMessages().get(messages.getMessages().size() - 1);
             lastDate = telegramMessageDto.getDate();
@@ -126,14 +102,7 @@ public class TelegramCollectorImpl implements TelegramCollector {
             }
             counter += messages.getMessages().size();
             log.info("Processed [{}] of [{}] total messages ", counter, messages.getTotal());
-            if (savedMessages == 0) {
-                log.info("All existing messages were saved before");
-                return;
-            }
-
         }
-//        while (true);
-
     }
 
     private void saveVector(TelegramMessage telegramMessage) {

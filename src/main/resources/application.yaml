@@ -29,7 +29,13 @@ spring:
         distance-type: COSINE_DISTANCE
         dimensions: 768
     ollama:
-      base-url: http://192.168.88.222:151
+      base-url: ${OLLAMA_BASE_URL:http://192.168.88.222:151}
 
 content:
-  directory: D://tg_logs/
+  directory: ${LOGS_DIRECTORY:D://tg_logs}
+
+telethon:
+  service:
+    http-scheme: ${TELETHON_SERVICE_HTTP_SCHEME:http}
+    host: ${TELETHON_SERVICE_HOST:192.168.88.222}
+    port: ${TELETHON_SERVICE_PORT:5000}
