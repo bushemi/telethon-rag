@@ -31,11 +31,12 @@ spring:
     ollama:
       base-url: ${OLLAMA_BASE_URL:http://192.168.88.222:151}
 
-content:
-  directory: ${LOGS_DIRECTORY:D://tg_logs}
-
 telethon:
   service:
     http-scheme: ${TELETHON_SERVICE_HTTP_SCHEME:http}
     host: ${TELETHON_SERVICE_HOST:192.168.88.222}
     port: ${TELETHON_SERVICE_PORT:5000}
+
+telegram:
+  channel:
+    id: ${TELEGRAM_CHANNEL_ID:-1001319248631}

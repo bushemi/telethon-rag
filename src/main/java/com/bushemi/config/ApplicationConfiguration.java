@@ -3,7 +3,6 @@ package com.bushemi.config;
 import com.bushemi.scheduler.Scheduler;
 import com.bushemi.service.TelegramCollector;
 import com.bushemi.service.TelethonApiService;
-import com.bushemi.service.VectorService;
 import com.bushemi.service.impl.TelethonApiServiceImpl;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +42,8 @@ public class ApplicationConfiguration {
 
     @Bean
     public Scheduler botScheduler(TelegramCollector telegramCollector,
-                                  VectorService vectorService) {
-        return new Scheduler(telegramCollector, vectorService);
+                                  @Value("${telegram.channel.id}") Long telegramChannelId) {
+        return new Scheduler(telegramCollector, telegramChannelId);
     }
 
     @Bean

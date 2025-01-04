@@ -2,8 +2,8 @@
 <configuration scan="true" scanPeriod="2 seconds">
   <include resource="org/springframework/boot/logging/logback/base.xml" />
   <property resource="application.yaml" />
-  <springProperty scope="context" name="CONTENT_DIRECTORY" source="content.directory"/>
-  <property name="LOG_PATH" value="${CONTENT_DIRECTORY}/logs"/>
+
+  <property name="LOG_PATH" value="/logs"/>
   <timestamp key="currentTimestamp" datePattern="yyyy-MM-dd'_'HH"/>
 
   <appender name="SYSTEM_OUT" class="ch.qos.logback.core.ConsoleAppender">

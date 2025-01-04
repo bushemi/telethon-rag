@@ -16,19 +16,17 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class Scheduler {
 
-    private static final long AUDIOBOOKS_CHANNEL_ID = -1002101121969L;
     private final TelegramCollector telegramCollector;
-    private final VectorService vectorService;
+    private final Long telegramChannelId;
     private final ThreadPoolExecutor threadPoolExecutor =
             new ThreadPoolExecutor(1, 3, 90L, TimeUnit.MINUTES, new LinkedBlockingDeque<>());
 
 
     @Scheduled(cron = "0 */10 * * * *")
-//    @Scheduled(cron = "0 0 1 * * *")
     public void collectGroups() {
-        log.info("Collect groups via cron");
+        log.info("Process groups via cron");
         threadPoolExecutor.submit(() -> {
-            log.info("123 from executor");
+            log.info("Process telegram channels");
             telegramCollector.collectChannels();
 
         });
@@ -36,24 +34,11 @@ public class Scheduler {
 
     @Scheduled(cron = "0 1/10 * * * *")
     public void collects() {
-        log.info("collects");
+        log.info("Process messages via cron");
         threadPoolExecutor.submit(() -> {
-            log.info("collects_123 from executor");
-            telegramCollector.collectMessagesForChannel(AUDIOBOOKS_CHANNEL_ID);
-//            vectorCheck();
+            log.info("Process telegram messages");
+            telegramCollector.collectMessagesForChannel(telegramChannelId);
         });
-    }
-
-    private void vectorCheck() {
-        long currentTimeMillis = System.currentTimeMillis();
-        String format = String.format("There are king and queen in the Great Britain. %s", currentTimeMillis);
-        try {
-            vectorService.add(format, Map.of("id", 123L, "time", currentTimeMillis));
-        }
-        catch (Exception e) {
-            log.error("Exception", e);
-            throw new RuntimeException(e);
-        }
     }
 
 }
