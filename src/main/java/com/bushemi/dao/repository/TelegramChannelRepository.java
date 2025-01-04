@@ -7,6 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface TelegramChannelRepository extends JpaRepository<TelegramChannel, Long> {
 
-    boolean existsByTgChannelId(Long ttgChannelId);
+    boolean existsByTgChannelId(Long tgChannelId);
 
 }
