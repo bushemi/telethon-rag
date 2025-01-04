@@ -8,7 +8,7 @@ import java.util.List;
 public class TelegramMessagesDto {
 
     private Long chatId;
-    private Integer from;
+    private String offset_date;
     private Integer limit;
     private List<TelegramMessageDto> messages;
     private Integer total;

@@ -1,6 +1,7 @@
 package com.bushemi.service.impl;
 
 import com.bushemi.model.telethon.TelegramChannelDto;
+import com.bushemi.model.telethon.TelegramMessageDto;
 import com.bushemi.model.telethon.TelegramMessagesDto;
 import com.bushemi.model.telethon.TelegramTotalChats;
 import com.bushemi.service.TelethonApiService;
@@ -38,10 +39,13 @@ public class TelethonApiServiceImpl implements TelethonApiService {
 //        List<TelegramChannel> channels = telethonApiService.getChannels(10);
 //        System.out.println("channels = " + channels);
 
-        TelegramMessagesDto messages = telethonApiService.getMessages(-1002101121969L, 10, 0);
-        System.out.println("messages = " + messages);
+        TelegramMessagesDto messages = telethonApiService.getMessages(-1002101121969L, 10, null);
+//        System.out.println("messages = " + messages);
+        messages.getMessages()
+                .stream()
+                .map(TelegramMessageDto::toString)
+                .forEach(log::info);
     }
-
 
     @Override
     public List<TelegramChannelDto> getChannels(int limit, String afterDate) {
@@ -101,7 +105,7 @@ public class TelethonApiServiceImpl implements TelethonApiService {
     }
 
     @Override
-    public TelegramMessagesDto getMessages(Long chatId, Integer limit, int from) {
+    public TelegramMessagesDto getMessages(Long chatId, Integer limit, String afterDate) {
 //        http://192.168.88.222:5000/chat/-1002101121969/getMessages?limit=5&from=10000
         URIBuilder uriBuilder = new URIBuilder();
 //        uriBuilder.setHost("http://192.168.88.222:5000/get_chats");
@@ -110,7 +114,9 @@ public class TelethonApiServiceImpl implements TelethonApiService {
         uriBuilder.setScheme(TELETHON_SCHEME);
 //        uriBuilder.setPath("get_chats");
         uriBuilder.addParameter("limit", String.valueOf(limit));
-        uriBuilder.addParameter("from", String.valueOf(from));
+        if (nonNull(afterDate)) {
+            uriBuilder.addParameter("offset_date", afterDate);
+        }
         uriBuilder.setPathSegments("chat", String.valueOf(chatId), "getMessages");
         // building http client
         RequestConfig requestConfig = RequestConfig.custom()
@@ -135,15 +141,15 @@ public class TelethonApiServiceImpl implements TelethonApiService {
             HttpEntity entity = httpResponse.getEntity();
 
             String string = EntityUtils.toString(entity, StandardCharsets.UTF_8);
-            log.info("string = " + string);
-            String decoded = StringEscapeUtils.unescapeJava(string);
+//            log.info("string = " + string);
+//            String decoded = StringEscapeUtils.unescapeJava(string);
 
 //            String s = new String(string.getBytes(StandardCharsets.US_ASCII), StandardCharsets.UTF_8);
 //            System.out.println("s = " + s);
-            log.info("Decoded: " + decoded);
+//            log.info("Decoded: " + decoded);
 
             TelegramMessagesDto telegramMessages = GSON.fromJson(string, TelegramMessagesDto.class);
-            log.info("Got the result {}", decoded);
+//            log.info("Got the result {}", telegramMessages);
             return telegramMessages;
         }
         catch (Exception e) {

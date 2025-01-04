@@ -16,10 +16,11 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class Scheduler {
 
+    private static final long AUDIOBOOKS_CHANNEL_ID = -1002101121969L;
     private final TelegramCollector telegramCollector;
     private final VectorService vectorService;
     private final ThreadPoolExecutor threadPoolExecutor =
-            new ThreadPoolExecutor(1, 1, 90L, TimeUnit.MINUTES, new LinkedBlockingDeque<>());
+            new ThreadPoolExecutor(1, 3, 90L, TimeUnit.MINUTES, new LinkedBlockingDeque<>());
 
 
     @Scheduled(cron = "0 */10 * * * *")
@@ -29,24 +30,30 @@ public class Scheduler {
         threadPoolExecutor.submit(() -> {
             log.info("123 from executor");
             telegramCollector.collectChannels();
+
         });
     }
 
-//    @Scheduled(cron = "0 * * * * *")
-//    public void collecs() {
-//        log.info("collecs");
-//        threadPoolExecutor.submit(() -> {
-//            log.info("collecs_123 from executor");
-//            long currentTimeMillis = System.currentTimeMillis();
-//            String format = String.format("There are king and queen in the Great Britain. %s", currentTimeMillis);
-//            try {
-//                vectorService.add(format, Map.of("id", 123L, "time", currentTimeMillis));
-//            }
-//            catch (Exception e) {
-//                log.error("Exception", e);
-//                throw new RuntimeException(e);
-//            }
-//        });
-//    }
+    @Scheduled(cron = "0 1/10 * * * *")
+    public void collects() {
+        log.info("collects");
+        threadPoolExecutor.submit(() -> {
+            log.info("collects_123 from executor");
+            telegramCollector.collectMessagesForChannel(AUDIOBOOKS_CHANNEL_ID);
+//            vectorCheck();
+        });
+    }
+
+    private void vectorCheck() {
+        long currentTimeMillis = System.currentTimeMillis();
+        String format = String.format("There are king and queen in the Great Britain. %s", currentTimeMillis);
+        try {
+            vectorService.add(format, Map.of("id", 123L, "time", currentTimeMillis));
+        }
+        catch (Exception e) {
+            log.error("Exception", e);
+            throw new RuntimeException(e);
+        }
+    }
 
 }

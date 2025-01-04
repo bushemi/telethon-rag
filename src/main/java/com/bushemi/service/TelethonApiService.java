@@ -9,7 +9,7 @@ public interface TelethonApiService {
 
     List<TelegramChannelDto> getChannels(int limit, String afterDate);
 
-    TelegramMessagesDto getMessages(Long chatId, Integer limit, int from);
+    TelegramMessagesDto getMessages(Long chatId, Integer limit, String afterDate);
 
     Integer totalChats();
 
