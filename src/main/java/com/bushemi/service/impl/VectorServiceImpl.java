@@ -19,29 +19,7 @@ public class VectorServiceImpl implements VectorService {
 
     @Override
     public String find(String text) {
-        System.out.println("VectorServiceImpl.find");
-        System.out.println("text = " + text);
 
-//#################### many documents
-//        List<Document> documents = List.of(
-//                new Document("Spring AI rocks!! Spring AI rocks!! Spring AI rocks!! Spring AI rocks!! Spring AI rocks!!",
-//                             Map.of("meta1", "meta1")),
-//                new Document("The World is Big and Salvation Lurks Around the Corner"),
-//                new Document("There are king and queen in the Great Britain.",
-//                             Map.of("meta2", "meta2")));
-
-//###################### one document
-        //        List<Document> documents = List.of(
-        //                new Document("There are king and queen in the Great Britain.",
-//                             Map.of("meta2", "meta2"))
-//        );
-
-        log.info("Created documents");
-// Add the documents to PGVector
-//        vectorStore.add(documents);
-        log.info("Added documents");
-
-// Retrieve documents similar to a query
         List<Document> results = vectorStore.similaritySearch(SearchRequest.query(text)
                                                                            .withTopK(2));
 
