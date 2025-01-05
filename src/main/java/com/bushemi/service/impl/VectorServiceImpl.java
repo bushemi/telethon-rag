@@ -60,7 +60,7 @@ public class VectorServiceImpl implements VectorService {
 
     @Override
     public void add(String text) {
-
+        log.error("Adding new text is not implemented yet");
     }
 
 }
