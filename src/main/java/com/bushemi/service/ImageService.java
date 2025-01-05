@@ -6,6 +6,6 @@ import java.io.IOException;
 
 public interface ImageService {
 
-    String logImageByteLength(MultipartFile file) throws IOException;
+    String getImageResponse(MultipartFile file) throws IOException;
 
 }

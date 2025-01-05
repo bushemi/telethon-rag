@@ -28,8 +28,7 @@ public class ImageController {
         }
 
         try {
-            // Log the byte length of the file
-            imageService.logImageByteLength(file);
+            imageService.getImageResponse(file);
 
             // Add success message
             model.addAttribute("message", "Image uploaded successfully!");
@@ -40,11 +39,6 @@ public class ImageController {
             return "imageUpload";
         }
     }
-//    The character's design is reminiscent of animated films and series known for their stylized characters and exaggerated expressions. Without additional context or information about the character or scene, it's difficult to determine the specific source material, the story behind the image, or the intended message conveyed through the character's expression and surroundings.
-
-//    The image shows a professional soccer player in action during a game. He is wearing the uniform of the Los Angeles Galaxy, which includes a white jersey with blue accents and the sponsor "Herbalife" on the front. The jersey also features the team's logo. On his right leg, he has a noticeable tattoo, and he's wearing white socks with black details, along with soccer cleats. He is in mid-motion, either kicking or preparing to kick the ball, which is rolling towards him on the field.
-//    The player appears focused and is looking down at the ball, likely planning his next move or assessing the best angle for a pass or shot. The background is a typical soccer stadium with seating that suggests it's a professional venue, though no spectators are visible in this particular frame of the image. There's also a partial view of an advertisement board on the side of the pitch, which is a common feature in most soccer stadiums.
-//    Without more context or information about the event (such as the score, the opponents, or the specific match), it's difficult to provide additional details. However, based on the image alone, we can say that the player is actively engaged in a competitive game of soccer and is part of the Los Angeles Galaxy team.
 
     @GetMapping("/imageUpload")
     public String imageUpload() {
