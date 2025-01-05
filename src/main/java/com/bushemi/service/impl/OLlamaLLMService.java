@@ -4,6 +4,7 @@ import com.bushemi.model.ollama.OLlamaRequest;
 import com.bushemi.model.ollama.OLlamaResponse;
 import com.bushemi.service.LLMService;
 import com.google.gson.Gson;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,14 +24,16 @@ import static java.util.Objects.isNull;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class OLlamaLLMService implements LLMService {
 
     private static final String SYSTEM_MESSAGE = "Отвечай коротко и на языке, на котором спрашивают.";
     private static final String URL = "http://192.168.88.222:11434/api/generate";
     private static final int MAX_TOKENS = 200;
-    private static final Gson GSON = new Gson();
     private static final String DEFAULT_PROMPT = "I need a funny response to this meme.";
     private static final String ONLY_UKRAINIAN = ". Відповідай українською";
+
+    private final Gson gson;
 
     public static void main(String[] args) {
         LLMService llmService = new OLlamaLLMService();
@@ -53,7 +56,7 @@ public class OLlamaLLMService implements LLMService {
         }
         OLlamaResponse oLlamaResponse = null;
         try {
-            oLlamaResponse = GSON.fromJson(stringResponse, OLlamaResponse.class);
+            oLlamaResponse = gson.fromJson(stringResponse, OLlamaResponse.class);
         }
         catch (Exception e) {
             log.error("error during parsing", e);
@@ -63,7 +66,9 @@ public class OLlamaLLMService implements LLMService {
         return oLlamaResponse.getResponse();
     }
 
-    private String getStringResponse(String message, String model, List<String> images) {
+    private String getStringResponse(String message,
+                                     String model,
+                                     List<String> images) {
         try {
             return sendHttpRequest(URL, message, model, images);
         }
@@ -73,7 +78,10 @@ public class OLlamaLLMService implements LLMService {
         }
     }
 
-    private String sendHttpRequest(String url, String message, String model, List<String> images) {
+    private String sendHttpRequest(String url,
+                                   String message,
+                                   String model,
+                                   List<String> images) {
         log.info("Send message [{}] to [{}]", message, url);
 
         OLlamaRequest oLlamaRequest = OLlamaRequest.builder()
@@ -83,7 +91,6 @@ public class OLlamaLLMService implements LLMService {
                                                    .build();
         // building http client
         RequestConfig requestConfig = RequestConfig.custom()
-//                                                   .setConnectionRequestTimeout(600_000)
                                                    .build();
 
         try (CloseableHttpClient httpClient = HttpClientBuilder.create()
@@ -92,7 +99,7 @@ public class OLlamaLLMService implements LLMService {
 
             HttpPost request = new HttpPost(url);
 
-            String json = GSON.toJson(oLlamaRequest);
+            String json = gson.toJson(oLlamaRequest);
             // adding the form data
             request.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
 
@@ -112,7 +119,8 @@ public class OLlamaLLMService implements LLMService {
     }
 
     @Override
-    public String getTextFromLlmByImage(String message, String imageBase64) {
+    public String getTextFromLlmByImage(String message,
+                                        String imageBase64) {
         if (isNull(message)) {
             message = "Describe what you see on this image";
         }
@@ -122,7 +130,7 @@ public class OLlamaLLMService implements LLMService {
         }
         OLlamaResponse oLlamaResponse = null;
         try {
-            oLlamaResponse = GSON.fromJson(stringResponse, OLlamaResponse.class);
+            oLlamaResponse = gson.fromJson(stringResponse, OLlamaResponse.class);
         }
         catch (Exception e) {
             log.error("error during parsing", e);

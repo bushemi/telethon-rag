@@ -4,6 +4,7 @@ public interface LLMService {
 
     String getTextFromLlm(String message);
 
-    String getTextFromLlmByImage(String message, String imageBase64);
+    String getTextFromLlmByImage(String message,
+                                 String imageBase64);
 
 }
