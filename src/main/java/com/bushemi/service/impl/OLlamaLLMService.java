@@ -50,7 +50,9 @@ public class OLlamaLLMService implements LLMService {
         return oLlamaResponse.getResponse();
     }
 
-    private String getStringResponse(String message, String model, List<String> images) {
+    private String getStringResponse(String message,
+                                     String model,
+                                     List<String> images) {
         try {
             return sendHttpRequest(URL, message, model, images);
         }
@@ -60,7 +62,10 @@ public class OLlamaLLMService implements LLMService {
         }
     }
 
-    private String sendHttpRequest(String url, String message, String model, List<String> images) {
+    private String sendHttpRequest(String url,
+                                   String message,
+                                   String model,
+                                   List<String> images) {
         log.info("Send message [{}] to [{}]", message, url);
 
         OLlamaRequest oLlamaRequest = OLlamaRequest.builder()
@@ -70,7 +75,6 @@ public class OLlamaLLMService implements LLMService {
                                                    .build();
         // building http client
         RequestConfig requestConfig = RequestConfig.custom()
-//                                                   .setConnectionRequestTimeout(600_000)
                                                    .build();
 
         try (CloseableHttpClient httpClient = HttpClientBuilder.create()
