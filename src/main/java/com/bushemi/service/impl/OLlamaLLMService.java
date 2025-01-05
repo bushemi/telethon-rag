@@ -36,7 +36,7 @@ public class OLlamaLLMService implements LLMService {
     private final Gson gson;
 
     public static void main(String[] args) {
-        LLMService llmService = new OLlamaLLMService();
+        LLMService llmService = new OLlamaLLMService(new Gson());
 //        String textFromLlm = llmService.getTextFromLlm("Сколько лет было иисусу, когда его распяли?");
 //        String textFromLlm = llmService.getTextFromLlm("Why is the sky blue?");
 //        System.out.println("textFromLlm = " + textFromLlm);
