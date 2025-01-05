@@ -18,11 +18,11 @@ public class ImageServiceImpl implements ImageService {
     private final LLMService llmService;
 
     @Override
-    public String logImageByteLength(MultipartFile file) throws IOException {
+    public String getImageResponse(MultipartFile file) throws IOException {
         byte[] bytes = file.getBytes();
         String encodedString = Base64.getEncoder().encodeToString(bytes);
         long byteLength = bytes.length;
-        System.out.println("Uploaded image byte length: " + byteLength);
+        log.info("Uploaded image byte length: " + byteLength);
         String textFromLlmByImage = llmService.getTextFromLlmByImage("Explain what you see on this image. Add context if it is needed",
                                                                      encodedString);
         log.info(textFromLlmByImage);
