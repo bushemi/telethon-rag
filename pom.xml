@@ -27,9 +27,15 @@
     <mockito-testng.version>0.5.2</mockito-testng.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <commons-text.version>1.13.0</commons-text.version>
+    <tgBot-version>6.7.0</tgBot-version>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.telegram</groupId>
+      <artifactId>telegrambots</artifactId>
+      <version>${tgBot-version}</version>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
     <dependency>
       <groupId>org.apache.commons</groupId>

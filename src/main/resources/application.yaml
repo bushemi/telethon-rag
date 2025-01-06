@@ -40,3 +40,8 @@ telethon:
 telegram:
   channel:
     id: ${TELEGRAM_CHANNEL_ID:-1001319248631}
+
+
+bot:
+  username: ${BOT_USERNAME}
+  token: ${BOT_TOKEN}
